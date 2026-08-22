@@ -33,7 +33,12 @@ CREATE WAREHOUSE IF NOT EXISTS CREDITPULSE_WH
     INITIALLY_SUSPENDED = TRUE
     COMMENT = 'Compute warehouse for CreditPulse development';
 
-
+-- Enforce expected warehouse configuration even when the warehouse
+-- already exists.
+ALTER WAREHOUSE CREDITPULSE_WH SET
+    WAREHOUSE_SIZE = 'XSMALL'
+    AUTO_SUSPEND = 60
+    AUTO_RESUME = TRUE;
 -- ------------------------------------------------------------
 -- 3. Project database
 -- ------------------------------------------------------------
