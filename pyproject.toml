@@ -2,4 +2,7 @@
 name = "creditpulse"
 version = "0.1.0"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "python-dotenv>=1.2.3",
+    "snowflake-connector-python>=4.7.2",
+]
