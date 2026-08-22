@@ -30,3 +30,6 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.log
+
+# dbt local user metadata
+.user.yml

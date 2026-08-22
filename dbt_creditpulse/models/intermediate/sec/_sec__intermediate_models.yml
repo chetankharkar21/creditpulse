@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: int_sec_xbrl_facts
+    description: >
+      Flattened SEC Company Facts XBRL observations. Each row represents
+      one individual fact observation while preserving filing lineage,
+      taxonomy, concept, unit, period, and accession information.
+
+    columns:
+      - name: ingestion_id
+        description: Identifier of the raw SEC payload that produced this fact.
+        data_tests:
+          - not_null
+
+      - name: cik
+        description: SEC Central Index Key identifying the company.
+        data_tests:
+          - not_null
+
+      - name: taxonomy
+        description: XBRL taxonomy such as us-gaap or dei.
+        data_tests:
+          - not_null
+
+      - name: concept
+        description: Original SEC XBRL concept name.
+        data_tests:
+          - not_null
+
+      - name: unit
+        description: Unit associated with the fact, such as USD or shares.
+        data_tests:
+          - not_null
+
+      - name: period_end_date
+        description: End date of the financial fact's reporting period.
+        data_tests:
+          - not_null
+
+      - name: accession_number
+        description: SEC accession number identifying the source filing.
+        data_tests:
+          - not_null
+
+      - name: filing_form
+        description: SEC filing type such as 10-K or 10-Q.
+        data_tests:
+          - not_null
+
+      - name: fact_period_type
+        description: Indicates whether the XBRL fact is instant or duration.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - instant
+                  - duration

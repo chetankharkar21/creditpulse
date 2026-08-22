@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: stg_sec_company_facts
+    description: >
+      Staging view of raw SEC Company Facts API payloads with ingestion
+      metadata and basic company identifiers extracted from the JSON payload.
+
+    columns:
+      - name: ingestion_id
+        description: Unique identifier for one ingested SEC payload.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: batch_id
+        description: Identifier grouping records from the same ingestion batch.
+        data_tests:
+          - not_null
+
+      - name: cik
+        description: Zero-padded SEC Central Index Key for the company.
+        data_tests:
+          - not_null
+
+      - name: entity_name
+        description: Company name provided by the SEC.
+
+      - name: payload_hash
+        description: SHA-256 fingerprint of the complete SEC JSON payload.
+        data_tests:
+          - not_null
+
+      - name: raw_payload
+        description: Original SEC Company Facts JSON stored as Snowflake VARIANT.
+        data_tests:
+          - not_null
