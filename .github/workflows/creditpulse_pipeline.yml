@@ -1,0 +1,49 @@
+name: CreditPulse Pipeline
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "30 12 * * *"
+
+concurrency:
+  group: creditpulse-production-pipeline
+  cancel-in-progress: false
+
+jobs:
+  run-creditpulse:
+    name: Run CreditPulse Pipeline
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 30
+
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      SNOWFLAKE_WAREHOUSE: CREDITPULSE_WH
+      SNOWFLAKE_DATABASE: CREDITPULSE
+      SNOWFLAKE_SCHEMA: RAW
+      SNOWFLAKE_ROLE: CREDITPULSE_ENGINEER_ROLE
+      DBT_SCHEMA: CORE
+
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Run CreditPulse pipeline
+        run: uv run python -m orchestration.run_pipeline

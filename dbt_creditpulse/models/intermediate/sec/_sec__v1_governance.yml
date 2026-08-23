@@ -1,0 +1,78 @@
+version: 2
+
+seeds:
+  - name: sec_v1_certified_metrics
+    description: "Governed allowlist of SEC financial metrics certified for use in CreditPulse V1 analytics and Gold models."
+
+    columns:
+      - name: canonical_metric
+        description: "CreditPulse canonical metric approved for V1."
+        data_tests:
+          - not_null
+          - unique
+
+      - name: metric_category
+        description: "Business category used to organize certified metrics."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - financial_performance
+                  - liquidity
+                  - balance_sheet
+
+      - name: period_type
+        description: "Expected SEC fact period type for the metric."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - instant
+                  - duration
+
+      - name: description
+        description: "Human-readable definition of the certified metric."
+
+models:
+  - name: int_sec_metric_coverage
+    description: "Coverage control that evaluates every loaded company against every V1-certified SEC metric, including metrics that are completely absent."
+
+    columns:
+      - name: cik
+        description: "SEC Central Index Key identifying the company."
+        data_tests:
+          - not_null
+
+      - name: company_name
+        description: "Latest company name from the SEC Company Facts payload."
+        data_tests:
+          - not_null
+
+      - name: canonical_metric
+        description: "V1-certified CreditPulse metric being evaluated."
+        data_tests:
+          - not_null
+
+      - name: metric_category
+        description: "Business category of the certified metric."
+
+      - name: period_type
+        description: "Expected instant or duration classification."
+
+      - name: is_present
+        description: "True when at least one resolved observation exists for the company and metric."
+        data_tests:
+          - not_null
+
+      - name: observation_count
+        description: "Number of resolved observations available for the company and metric."
+        data_tests:
+          - not_null
+
+      - name: earliest_period
+        description: "Earliest reporting period available when the metric is present."
+
+      - name: latest_period
+        description: "Most recent reporting period available when the metric is present."

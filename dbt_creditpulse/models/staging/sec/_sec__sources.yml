@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: sec
+    database: CREDITPULSE
+    schema: RAW
+    description: Raw SEC EDGAR data ingested by the CreditPulse Python pipeline.
+
+    tables:
+      - name: company_facts
+        identifier: SEC_COMPANY_FACTS
+        description: Raw SEC Company Facts API responses stored as Snowflake VARIANT.

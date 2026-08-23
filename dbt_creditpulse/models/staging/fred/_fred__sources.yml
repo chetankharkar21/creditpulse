@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: fred
+    database: CREDITPULSE
+    schema: RAW
+    description: Raw FRED macroeconomic observations ingested by the CreditPulse Python pipeline.
+
+    tables:
+      - name: observations
+        identifier: FRED_OBSERVATIONS
+        description: Raw observations retrieved from the Federal Reserve Economic Data API.

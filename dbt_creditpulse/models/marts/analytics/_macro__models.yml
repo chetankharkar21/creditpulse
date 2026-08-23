@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: mart_macro_environment
+    description: >
+      Monthly macroeconomic environment for CreditPulse using latest-known
+      resolved FRED observations. Provides interest-rate, labor-market,
+      inflation, and industrial-activity context for corporate credit analysis.
+
+    columns:
+      - name: observation_date
+        description: Monthly economic observation date.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: federal_funds_rate
+        description: Effective federal funds rate from FRED series FEDFUNDS.
+
+      - name: unemployment_rate
+        description: U.S. unemployment rate from FRED series UNRATE.
+
+      - name: consumer_price_index
+        description: Consumer Price Index from FRED series CPIAUCSL.
+
+      - name: inflation_yoy_rate
+        description: Year-over-year percentage change in CPI expressed as a decimal rate.
+
+      - name: industrial_production_index
+        description: Industrial Production Index from FRED series INDPRO.
+
+      - name: industrial_production_yoy_rate
+        description: Year-over-year percentage change in industrial production expressed as a decimal rate.

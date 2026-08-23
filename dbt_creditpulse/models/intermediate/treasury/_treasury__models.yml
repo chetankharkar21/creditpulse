@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: int_treasury_resolved_yield_curve
+    description: >
+      Latest-known U.S. Treasury Daily Treasury Par Yield Curve observation
+      for each business date while retaining ingestion and revision metadata.
+
+    columns:
+      - name: ingestion_id
+        description: Identifier of the RAW record selected as the latest-known version.
+        data_tests:
+          - not_null
+
+      - name: observation_date
+        description: Treasury yield-curve business date.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: yield_3m_pct
+        description: Three-month Treasury par yield expressed in percentage points.
+        data_tests:
+          - not_null
+
+      - name: yield_2y_pct
+        description: Two-year Treasury par yield expressed in percentage points.
+        data_tests:
+          - not_null
+
+      - name: yield_5y_pct
+        description: Five-year Treasury par yield expressed in percentage points.
+        data_tests:
+          - not_null
+
+      - name: yield_10y_pct
+        description: Ten-year Treasury par yield expressed in percentage points.
+        data_tests:
+          - not_null
+
+      - name: yield_30y_pct
+        description: Thirty-year Treasury par yield expressed in percentage points.
+        data_tests:
+          - not_null
+
+      - name: has_revision
+        description: True when more than one ingested version exists for the date.
+        data_tests:
+          - not_null
+
+      - name: fetched_at
+        description: Timestamp when the selected version was retrieved.
+        data_tests:
+          - not_null
+
+      - name: payload_hash
+        description: SHA-256 hash of the complete Treasury source row.
+        data_tests:
+          - not_null

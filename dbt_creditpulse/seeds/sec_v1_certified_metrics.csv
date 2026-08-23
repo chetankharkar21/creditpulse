@@ -1,0 +1,7 @@
+canonical_metric,metric_category,period_type,description
+REVENUE,financial_performance,duration,Reported company revenue
+OPERATING_CASH_FLOW,financial_performance,duration,Net cash provided by operating activities
+CASH,liquidity,instant,Cash and cash equivalents
+CURRENT_ASSETS,liquidity,instant,Current assets
+CURRENT_LIABILITIES,liquidity,instant,Current liabilities
+TOTAL_ASSETS,balance_sheet,instant,Total assets

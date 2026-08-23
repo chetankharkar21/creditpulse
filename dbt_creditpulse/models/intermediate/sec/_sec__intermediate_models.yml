@@ -1,0 +1,285 @@
+version: 2
+
+models:
+  - name: int_sec_xbrl_facts
+    description: >
+      Flattened SEC Company Facts XBRL observations. Each row represents
+      one individual fact observation while preserving filing lineage,
+      taxonomy, concept, unit, period, and accession information.
+
+    columns:
+      - name: ingestion_id
+        description: Identifier of the raw SEC payload that produced this fact.
+        data_tests:
+          - not_null
+
+      - name: cik
+        description: SEC Central Index Key identifying the company.
+        data_tests:
+          - not_null
+
+      - name: taxonomy
+        description: XBRL taxonomy such as us-gaap or dei.
+        data_tests:
+          - not_null
+
+      - name: concept
+        description: Original SEC XBRL concept name.
+        data_tests:
+          - not_null
+
+      - name: unit
+        description: Unit associated with the fact, such as USD or shares.
+        data_tests:
+          - not_null
+
+      - name: period_end_date
+        description: End date of the financial fact's reporting period.
+        data_tests:
+          - not_null
+
+      - name: accession_number
+        description: SEC accession number identifying the source filing.
+        data_tests:
+          - not_null
+
+      - name: filing_form
+        description: SEC filing type such as 10-K or 10-Q.
+        data_tests:
+          - not_null
+
+      - name: fact_period_type
+        description: Indicates whether the XBRL fact is instant or duration.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - instant
+                  - duration
+
+  - name: int_sec_canonical_financial_facts
+    description: >
+      Canonical SEC financial facts mapped from source XBRL concepts into
+      governed CreditPulse business metrics while preserving SEC filing lineage.
+
+    columns:
+      - name: ingestion_id
+        description: Identifier of the SEC Company Facts payload used.
+        data_tests:
+          - not_null
+
+      - name: cik
+        description: SEC Central Index Key identifying the company.
+        data_tests:
+          - not_null
+
+      - name: canonical_metric
+        description: Governed CreditPulse financial metric name.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TOTAL_ASSETS
+                  - CURRENT_ASSETS
+                  - TOTAL_LIABILITIES
+                  - CURRENT_LIABILITIES
+                  - CASH
+                  - REVENUE
+                  - NET_INCOME
+                  - OPERATING_CASH_FLOW
+                  - CURRENT_DEBT
+                  - LONG_TERM_DEBT
+
+      - name: sec_concept
+        description: Original SEC XBRL concept mapped to the canonical metric.
+        data_tests:
+          - not_null
+
+      - name: unit
+        description: Unit of the financial fact.
+        data_tests:
+          - not_null
+
+      - name: metric_value
+        description: Numeric value of the canonical financial metric.
+        data_tests:
+          - not_null
+
+      - name: period_end_date
+        description: Reporting period end date.
+        data_tests:
+          - not_null
+
+      - name: period_days
+        description: >
+          Number of calendar days covered by duration facts.
+          Null for instant balance-sheet facts.
+
+      - name: reporting_period_scope
+        description: >
+          Standardized reporting-period classification derived from the
+          duration of the SEC financial fact.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - INSTANT
+                  - QUARTER
+                  - YTD_6_MONTHS
+                  - YTD_9_MONTHS
+                  - ANNUAL
+                  - OTHER
+
+      - name: accession_number
+        description: SEC filing accession number providing source lineage.
+        data_tests:
+          - not_null
+
+      - name: fact_period_type
+        description: Indicates whether the metric is an instant or duration fact.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - instant
+                  - duration
+
+      - name: mapping_priority
+        description: Priority assigned to the SEC concept mapping.
+        data_tests:
+          - not_null
+
+  - name: int_sec_resolved_financial_facts
+    description: >
+      Resolved CreditPulse financial facts containing one latest-known
+      observation per company, canonical metric, and business reporting period.
+      Preserves revision and filing-history metadata for auditability.
+
+    columns:
+      - name: ingestion_id
+        description: Identifier of the SEC payload associated with the selected latest record.
+        data_tests:
+          - not_null
+
+      - name: cik
+        description: SEC Central Index Key identifying the company.
+        data_tests:
+          - not_null
+
+      - name: canonical_metric
+        description: Governed CreditPulse financial metric.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - TOTAL_ASSETS
+                  - CURRENT_ASSETS
+                  - TOTAL_LIABILITIES
+                  - CURRENT_LIABILITIES
+                  - CASH
+                  - REVENUE
+                  - NET_INCOME
+                  - OPERATING_CASH_FLOW
+                  - CURRENT_DEBT
+                  - LONG_TERM_DEBT
+
+      - name: reporting_period_scope
+        description: Standardized reporting-period classification.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - INSTANT
+                  - QUARTER
+                  - YTD_6_MONTHS
+                  - YTD_9_MONTHS
+                  - ANNUAL
+                  - OTHER
+
+      - name: period_end_date
+        description: End date of the resolved financial reporting period.
+        data_tests:
+          - not_null
+
+      - name: metric_value
+        description: Latest-known value selected for the business reporting period.
+        data_tests:
+          - not_null
+
+      - name: accession_number
+        description: SEC accession number associated with the selected latest observation.
+        data_tests:
+          - not_null
+
+      - name: filed_date
+        description: Filing date of the selected latest observation.
+        data_tests:
+          - not_null
+
+      - name: original_metric_value
+        description: Earliest observed value for the same business reporting period.
+        data_tests:
+          - not_null
+
+      - name: observation_count
+        description: Total number of filing-level observations found for the business period.
+        data_tests:
+          - not_null
+
+      - name: filing_count
+        description: Number of distinct SEC filings containing the business-period fact.
+        data_tests:
+          - not_null
+
+      - name: distinct_value_count
+        description: Number of distinct reported values observed across filings.
+        data_tests:
+          - not_null
+
+      - name: is_revised
+        description: >
+          True when a later SEC filing contains a different value from an
+          earlier observation for the same business period.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - true
+                  - false
+
+      - name: first_filed_date
+        description: Earliest filing date containing the business-period fact.
+        data_tests:
+          - not_null
+
+      - name: latest_filed_date
+        description: Latest filing date containing the business-period fact.
+        data_tests:
+          - not_null
+
+      - name: original_accession_number
+        description: SEC accession number associated with the earliest observed record.
+        data_tests:
+          - not_null
+
+      - name: original_filed_date
+        description: Filing date associated with the earliest observed record.
+        data_tests:
+          - not_null
+
+      - name: revision_amount
+        description: >
+          Difference between the latest-known metric value and the earliest
+          observed metric value for the same business period.
+
+      - name: revision_pct
+        description: >
+          Percentage change between the latest-known and earliest observed
+          values. Null when the original metric value is zero.
