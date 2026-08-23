@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: mart_treasury_yield_curve
+    description: >
+      Daily U.S. Treasury yield-curve analytics for CreditPulse,
+      including selected maturities, curve spreads, and inversion indicators.
+
+    columns:
+      - name: observation_date
+        description: Treasury business date.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: yield_3m_pct
+        description: Three-month Treasury par yield in percentage points.
+        data_tests:
+          - not_null
+
+      - name: yield_2y_pct
+        description: Two-year Treasury par yield in percentage points.
+        data_tests:
+          - not_null
+
+      - name: yield_5y_pct
+        description: Five-year Treasury par yield in percentage points.
+        data_tests:
+          - not_null
+
+      - name: yield_10y_pct
+        description: Ten-year Treasury par yield in percentage points.
+        data_tests:
+          - not_null
+
+      - name: yield_30y_pct
+        description: Thirty-year Treasury par yield in percentage points.
+        data_tests:
+          - not_null
+
+      - name: spread_10y_2y_bps
+        description: Ten-year minus two-year Treasury spread in basis points.
+        data_tests:
+          - not_null
+
+      - name: spread_10y_3m_bps
+        description: Ten-year minus three-month Treasury spread in basis points.
+        data_tests:
+          - not_null
+
+      - name: is_10y_2y_inverted
+        description: True when the ten-year yield is below the two-year yield.
+        data_tests:
+          - not_null
+
+      - name: is_10y_3m_inverted
+        description: True when the ten-year yield is below the three-month yield.
+        data_tests:
+          - not_null
