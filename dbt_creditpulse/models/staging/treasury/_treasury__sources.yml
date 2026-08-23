@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: treasury
+    database: CREDITPULSE
+    schema: RAW
+    description: >
+      Raw U.S. Treasury Daily Treasury Par Yield Curve observations
+      ingested by the CreditPulse Python pipeline.
+
+    tables:
+      - name: yield_curve
+        identifier: TREASURY_YIELD_CURVE
+        description: >
+          Version-preserving raw Treasury yield-curve observations,
+          with one ingested record per Treasury business date and source version.
