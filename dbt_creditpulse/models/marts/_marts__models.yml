@@ -1,0 +1,93 @@
+version: 2
+
+models:
+  - name: dim_company
+    description: "Gold company dimension with one row per SEC CIK."
+
+    columns:
+      - name: company_key
+        description: "Deterministic surrogate key generated from SEC CIK."
+        data_tests:
+          - not_null
+          - unique
+
+      - name: cik
+        description: "SEC Central Index Key."
+        data_tests:
+          - not_null
+          - unique
+
+      - name: company_name
+        description: "Latest company name from SEC Company Facts."
+        data_tests:
+          - not_null
+
+
+  - name: dim_financial_metric
+    description: "Gold dimension containing the financial metrics certified for CreditPulse V1."
+
+    columns:
+      - name: metric_key
+        description: "Deterministic surrogate key for the canonical financial metric."
+        data_tests:
+          - not_null
+          - unique
+
+      - name: canonical_metric
+        description: "CreditPulse V1 canonical metric."
+        data_tests:
+          - not_null
+          - unique
+
+      - name: metric_category
+        data_tests:
+          - not_null
+
+      - name: period_type
+        data_tests:
+          - not_null
+
+
+  - name: fact_financial_metric
+    description: "Gold financial fact table containing resolved values for V1-certified SEC metrics."
+
+    columns:
+      - name: financial_fact_key
+        description: "Deterministic key for the company, metric and reporting-period grain."
+        data_tests:
+          - not_null
+          - unique
+
+      - name: company_key
+        description: "Foreign key to DIM_COMPANY."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_company')
+                field: company_key
+
+      - name: metric_key
+        description: "Foreign key to DIM_FINANCIAL_METRIC."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_financial_metric')
+                field: metric_key
+
+      - name: period_end_date
+        data_tests:
+          - not_null
+
+      - name: reporting_period_scope
+        data_tests:
+          - not_null
+
+      - name: metric_value
+        data_tests:
+          - not_null
+
+      - name: unit
+        data_tests:
+          - not_null

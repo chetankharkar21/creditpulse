@@ -17,9 +17,12 @@ models:
   creditpulse:
     staging:
       +materialized: view
+      +schema: CORE
 
     intermediate:
       +materialized: view
+      +schema: CORE
 
     marts:
       +materialized: table
+      +schema: ANALYTICS
