@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: int_fred_resolved_observations
+    description: >
+      Latest-known resolved FRED observation for each economic series
+      and observation date, while retaining revision and ingestion metadata.
+
+    columns:
+      - name: ingestion_id
+        description: Identifier of the RAW record selected as the latest-known observation.
+        data_tests:
+          - not_null
+
+      - name: series_id
+        description: FRED economic series identifier.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - FEDFUNDS
+                  - UNRATE
+                  - CPIAUCSL
+                  - INDPRO
+
+      - name: observation_date
+        description: Economic observation date reported by FRED.
+        data_tests:
+          - not_null
+
+      - name: raw_value
+        description: Original value representation supplied by FRED.
+        data_tests:
+          - not_null
+
+      - name: fetched_at
+        description: Timestamp when the observation was retrieved from FRED.
+        data_tests:
+          - not_null
