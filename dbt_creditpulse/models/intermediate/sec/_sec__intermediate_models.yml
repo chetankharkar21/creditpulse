@@ -91,6 +91,8 @@ models:
                   - OPERATING_CASH_FLOW
                   - CURRENT_DEBT
                   - LONG_TERM_DEBT
+                  - TOTAL_EQUITY
+                  - REDEEMABLE_NCI
 
       - name: sec_concept
         description: Original SEC XBRL concept mapped to the canonical metric.
@@ -187,6 +189,8 @@ models:
                   - OPERATING_CASH_FLOW
                   - CURRENT_DEBT
                   - LONG_TERM_DEBT
+                  - TOTAL_EQUITY
+                  - REDEEMABLE_NCI
 
       - name: reporting_period_scope
         description: Standardized reporting-period classification.

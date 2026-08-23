@@ -11,3 +11,5 @@ us-gaap,NetIncomeLoss,NET_INCOME,duration,USD,1
 us-gaap,NetCashProvidedByUsedInOperatingActivities,OPERATING_CASH_FLOW,duration,USD,1
 us-gaap,LongTermDebtCurrent,CURRENT_DEBT,instant,USD,1
 us-gaap,LongTermDebtNoncurrent,LONG_TERM_DEBT,instant,USD,1
+us-gaap,StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest,TOTAL_EQUITY,instant,USD,1
+us-gaap,RedeemableNoncontrollingInterestEquityCarryingAmount,REDEEMABLE_NCI,instant,USD,1
