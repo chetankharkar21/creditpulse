@@ -8,6 +8,10 @@ from ingestion.sec.load_company_facts_batch import load_enabled_companies
 from ingestion.treasury.load_treasury_yield_curve import (
     load_treasury_yield_curve,
 )
+from orchestration.pipeline_audit import (
+    finish_pipeline_run,
+    start_pipeline_run,
+)
 
 
 def current_and_previous_months() -> list[str]:
@@ -56,30 +60,60 @@ def run_pipeline() -> None:
     pipeline_started_at = datetime.now(timezone.utc)
     start_time = time.perf_counter()
 
+    run_id = start_pipeline_run()
+
     print("=" * 70)
     print("CREDITPULSE PIPELINE START")
+    print(f"Run ID: {run_id}")
     print(f"Started at: {pipeline_started_at.isoformat()}")
     print("=" * 70)
 
-    print("\n[1/4] SEC ingestion")
-    load_enabled_companies()
+    try:
+        print("\n[1/4] SEC ingestion")
+        load_enabled_companies()
 
-    print("\n[2/4] FRED ingestion")
-    load_enabled_series()
+        print("\n[2/4] FRED ingestion")
+        load_enabled_series()
 
-    print("\n[3/4] U.S. Treasury ingestion")
+        print("\n[3/4] U.S. Treasury ingestion")
 
-    for source_period in current_and_previous_months():
-        print(f"\nLoading Treasury period {source_period}...")
-        load_treasury_yield_curve(source_period)
+        for source_period in current_and_previous_months():
+            print(f"\nLoading Treasury period {source_period}...")
+            load_treasury_yield_curve(source_period)
 
-    print("\n[4/4] dbt build")
-    run_dbt_build()
+        print("\n[4/4] dbt build")
+        run_dbt_build()
+
+    except Exception as exc:
+        elapsed_seconds = time.perf_counter() - start_time
+
+        try:
+            finish_pipeline_run(
+                run_id=run_id,
+                status="FAILED",
+                duration_seconds=elapsed_seconds,
+                error_message=f"{type(exc).__name__}: {exc}",
+            )
+
+        except Exception as audit_exc:
+            print(
+                "WARNING: Failed to update pipeline audit record: "
+                f"{audit_exc}"
+            )
+
+        raise
 
     elapsed_seconds = time.perf_counter() - start_time
 
+    finish_pipeline_run(
+        run_id=run_id,
+        status="SUCCESS",
+        duration_seconds=elapsed_seconds,
+    )
+
     print("\n" + "=" * 70)
     print("CREDITPULSE PIPELINE SUCCESS")
+    print(f"Run ID: {run_id}")
     print(f"Elapsed seconds: {elapsed_seconds:.2f}")
     print("=" * 70)
 
