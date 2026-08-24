@@ -33,3 +33,9 @@ Thumbs.db
 
 # dbt local user metadata
 .user.yml
+
+# Secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
